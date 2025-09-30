@@ -1,0 +1,126 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Contact form submissions
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  status    ContactStatus @default(PENDING)
+
+  @@map("contacts")
+}
+
+// Donation records
+model Donation {
+  id           String       @id @default(cuid())
+  name         String
+  email        String
+  phone        String?
+  amount       Float
+  donationType DonationType @default(GENERAL)
+  paymentId    String?      // For payment gateway integration
+  status       DonationStatus @default(PENDING)
+  message      String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@map("donations")
+}
+
+// Join us / Volunteer applications
+model Volunteer {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  phone       String
+  profession  String?
+  skills      String?
+  availability String?
+  message     String?
+  status      VolunteerStatus @default(PENDING)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("volunteers")
+}
+
+// Newsletter subscriptions
+model Newsletter {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("newsletters")
+}
+
+// Gallery images
+model Gallery {
+  id          String      @id @default(cuid())
+  title       String
+  description String?
+  imageUrl    String
+  category    GalleryCategory @default(GENERAL)
+  isPublished Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("gallery")
+}
+
+// Enums
+enum ContactStatus {
+  PENDING
+  REVIEWED
+  RESPONDED
+  CLOSED
+}
+
+enum DonationType {
+  GENERAL
+  EDUCATION
+  SCHOLARSHIP
+  INFRASTRUCTURE
+  EMERGENCY
+}
+
+enum DonationStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum VolunteerStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  ACTIVE
+  INACTIVE
+}
+
+enum GalleryCategory {
+  GENERAL
+  EVENTS
+  EDUCATION
+  AWARDS
+  COMMUNITY
+  INFRASTRUCTURE
+}
