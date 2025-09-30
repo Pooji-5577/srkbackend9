@@ -76,10 +76,9 @@ app.post('/api/contact', async (req, res) => {
     
     // Basic validation
     if (!name || !email || !message) {
-      res.status(400).json({
+      return res.status(400).json({
         error: 'Name, email, and message are required fields'
       });
-      return;
     }
 
     // Save to database using Prisma
@@ -92,13 +91,13 @@ app.post('/api/contact', async (req, res) => {
       }
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       message: 'Contact form submitted successfully',
       data: contact
     });
   } catch (error) {
     console.error('Contact form error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Internal server error'
     });
   }
@@ -111,10 +110,9 @@ app.post('/api/donations', async (req, res) => {
     
     // Basic validation
     if (!name || !email || !amount) {
-      res.status(400).json({
+      return res.status(400).json({
         error: 'Name, email, and amount are required fields'
       });
-      return;
     }
 
     // Save to database using Prisma
@@ -129,13 +127,13 @@ app.post('/api/donations', async (req, res) => {
       }
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       message: 'Donation request received successfully',
       data: donation
     });
   } catch (error) {
     console.error('Donation error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Internal server error'
     });
   }
@@ -169,7 +167,7 @@ app.post('/api/join-us', async (req, res) => {
     });
 
     console.log('Successfully created volunteer record:', joinUsRequest.id);
-    res.status(201).json({
+    return res.status(201).json({
       message: 'Thank you for joining us! We will contact you soon.',
       success: true,
       data: { id: joinUsRequest.id }
